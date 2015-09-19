@@ -10,12 +10,10 @@ class ServiceForumweb implements ServiceInterface {
 		$top_response = $response['_services']['top_10'];
 
 		// Get position in top 10
-		$top_position = false;
 		$i = 0;
 		foreach ($top_response['users'] as $top_user) {
 			++$i;
-			if ($top_user['user_id'] == $config['user_id']) {
-				$top_position = $i;
+			if ($top_user['user_id'] === $config['user_id']) {
 				break;
 			}
 		}
@@ -23,14 +21,14 @@ class ServiceForumweb implements ServiceInterface {
 		return [
 			'help_points' => (int)$user_response['users'][0]['user_helps'],
 			'posts' => (int)$user_response['users'][0]['user_posts'],
-			'top_position' => $top_position
+			'top_position' => $i
 		];
 	}
 
 	public function template($data) {
 		return [
 			'Postów' => number_format($data['posts'], 0, '.', ' '),
-			'Pozycja w rankingu użytkowników' => $data['top_position'] ? $data['top_position'] : 'Poza top10 :(',
+			'Pozycja w rankingu użytkowników' => $data['top_position'] ?: 'Poza top10 :(',
 			'Punktów pomocy' => number_format($data['help_points'], 0, '.', ' ')
 		];
 	}
